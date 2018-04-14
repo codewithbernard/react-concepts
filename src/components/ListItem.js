@@ -13,11 +13,9 @@ class ListItem extends Component {
   render() {
     const { fillBackground } = this.state;
     return (
-      <div
-        className={fillBackground ? "fillBackground" : ""}
-        onClick={this.toggleFillBackgorund}
-      >
-        <p>{this.props.title}</p>
+      <div className={fillBackground ? "fillBackground" : ""}>
+        <p onClick={this.toggleFillBackgorund}>{this.props.title}</p>
+        <button onClick={this.props.onDelete}>Delete</button>
       </div>
     );
   }
