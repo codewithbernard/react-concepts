@@ -1,13 +1,64 @@
 import React, { Component } from "react";
 import ListItem from "./ListItem";
 import { listItemValues } from "../data";
+import { Button } from "react-bootstrap";
 
+// https://reactjs.org/docs/react-component.html#the-component-lifecycle
 class List extends Component {
   // Initialize state. We are kkeping track of items and inputValue.
-  state = {
-    inputValue: "",
-    items: listItemValues
-  };
+  // Called one time only. Executed first
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputValue: "",
+      items: listItemValues,
+      message: ""
+    };
+    console.log("Calling constructor");
+  }
+
+  // Called once only. After constructor
+  componentWillMount() {
+    console.log("Calling component will mount");
+  }
+
+  // Called once only. After render
+  componentDidMount() {
+    console.log("Calling component did mount");
+  }
+
+  // Called each times state changes. Before state is actually changed
+  componentWillUpdate(nextProps, nextState) {
+    console.log("Calling component will update");
+    if (this.state.items.length < nextState.items.length) {
+      this.setState({ message: "New item was added" });
+
+      // Not inline way
+      // const myFunction = () => {
+      //   this.setState({ message: "" });
+      // };
+      // setTimeout(myFunction, 1000);
+
+      // Inline way of passing function
+      setTimeout(() => this.setState({ message: "" }), 1000);
+    }
+
+    if (nextState.items.length < this.state.items.length) {
+      this.setState({ message: "Item was removed" });
+      setTimeout(() => this.setState({ message: "" }), 1000);
+    }
+  }
+
+  // Called each times state changes. After state is actually changed
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Calling component did update");
+  }
+
+  // Determines if the component should be rerendered
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("Calling component should update");
+    return true;
+  }
 
   // Go over items and for each item from the array return ListItem component. Each ListItem will have onDelete props.
   // onDelete is going to be function which will execute removeItem function with item title as the argument
@@ -52,7 +103,9 @@ class List extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
+  // Called multiple times. After componentWillMount
   render() {
+    console.log("Calling render");
     return (
       <div>
         <form onSubmit={this.addItem}>
@@ -61,7 +114,10 @@ class List extends Component {
             value={this.state.inputValue}
             type="text"
           />
-          <button type="submit">Submit</button>
+          <Button type="submit" bsStyle="primary">
+            Submit
+          </Button>
+          {this.state.message ? <p>{this.state.message}</p> : null}
         </form>
         {this.renderItems()}
       </div>
